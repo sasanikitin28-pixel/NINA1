@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>по Любви — Лазерная эпиляция</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* ─────────────────────── ROOT VARS ─────────────────────── */
+:root {
+  --bg: #0c0c0e;
+  --surface: #141416;
+  --surface2: #1a1a1e;
+  --border: #272730;
+  --border-light: #38383f;
+  --gold: #c9a96e;
+  --gold-light: #e8c99a;
+  --gold-pale: #f5e8d0;
+  --gold-dim: rgba(201,169,110,0.15);
+  --rose: #e8a0a0;
+  --rose-dim: rgba(232,160,160,0.12);
+  --text: #f0ede8;
+  --text-muted: #8a8790;
+  --text-dim: #52505a;
+  --success: #6fcf97;
+  --error: #eb5757;
+  --busy: #2d2024;
+  --busy-border: #5c3040;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 8px 40px rgba(0,0,0,0.6);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ──────────────────────── STICKY NAV ──────────────────────── */
+.topnav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:72px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;
+  transition:background 0.4s,backdrop-filter 0.4s,border-color 0.4s;
+  border-bottom:1px solid transparent;
+}
+.topnav.scrolled{
+  background:rgba(12,12,14,0.96);
+  backdrop-filter:blur(24px);
+  border-color:var(--border);
+}
+
+.nav-logo{
+  font-family:'Cormorant Garamond',serif;
+  display:flex;align-items:baseline;gap:5px;
+  cursor:pointer;
+}
+.nav-logo .pre{font-size:0.95rem;font-weight:300;font-style:italic;color:rgba(240,237,232,0.55);}
+.nav-logo .main{font-size:1.7rem;font-weight:500;color:var(--gold-light);letter-spacing:0.04em;}
+
+.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-link{
+  background:transparent;border:1px solid transparent;
+  color:rgba(240,237,232,0.55);
+  padding:7px 16px;border-radius:var(--radius-sm);
+  font-family:'DM Sans',sans-serif;font-size:0.8rem;letter-spacing:0.04em;
+  cursor:pointer;transition:all 0.22s;display:flex;align-items:center;gap:7px;
+}
+.nav-link:hover{color:var(--text);background:rgba(255,255,255,0.05);}
+.nav-link.active{color:var(--gold-light);border-color:rgba(201,169,110,0.3);background:var(--gold-dim);}
+
+.nav-right{display:flex;align-items:center;gap:8px;}
+.btn-admin{
+  background:transparent;border:1px solid rgba(255,255,255,0.15);
+  color:rgba(240,237,232,0.45);
+  padding:7px 14px;border-radius:var(--radius-sm);
+  font-family:'DM Sans',sans-serif;font-size:0.78rem;
+  cursor:pointer;transition:all 0.25s;
+  display:flex;align-items:center;gap:7px;
+}
+.btn-admin:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-dim);}
+
+/* ──────────────────────── PAGES ──────────────────────── */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ══════════════════════════════════════════════════════════
+   PAGE 1 — HERO
+══════════════════════════════════════════════════════════ */
+.hero-section{
+  position:relative;
+  width:100%;height:100vh;min-height:600px;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* SLIDESHOW */
+.slideshow{
+  position:absolute;inset:0;z-index:0;
+}
+.slide{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  opacity:0;transition:opacity 1.5s ease;
+}
+.slide.active{opacity:1;}
+
+/* Placeholder slides using CSS gradients (replace with real photos) */
+.slide-1{background-image:
+  linear-gradient(135deg, #1a1018 0%, #2d1f28 40%, #1a1520 100%),
+  url('PHOTO_1_URL');
+  background-blend-mode:multiply;
+}
+.slide-2{background-image:
+  linear-gradient(135deg, #0e1520 0%, #1e2030 40%, #120e18 100%),
+  url('PHOTO_2_URL');
+  background-blend-mode:multiply;
+}
+.slide-3{background-image:
+  linear-gradient(135deg, #1a1415 0%, #2a1e22 40%, #151018 100%),
+  url('PHOTO_3_URL');
+  background-blend-mode:multiply;
+}
+
+/* Dark overlay for readability */
+.hero-overlay{
+  position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to bottom,
+    rgba(12,12,14,0.35) 0%,
+    rgba(12,12,14,0.2)  40%,
+    rgba(12,12,14,0.65) 85%,
+    rgba(12,12,14,0.95) 100%
+  );
+}
+
+/* Hero content */
+.hero-content{
+  position:relative;z-index:2;
+  text-align:center;
+  padding:0 24px;
+  max-width:800px;
+}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:0.68rem;letter-spacing:0.28em;text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:32px;
+  opacity:0;animation:fadeUp 0.9s 0.3s ease forwards;
+}
+.hero-eyebrow::before,.hero-eyebrow::after{
+  content:'';display:block;width:28px;height:1px;background:var(--gold);opacity:0.5;
+}
+
+.hero-brand{
+  font-family:'Cormorant Garamond',serif;
+  display:flex;flex-direction:column;align-items:center;
+  margin-bottom:28px;
+  opacity:0;animation:fadeUp 0.9s 0.55s ease forwards;
+}
+.hero-brand .h-pre{
+  font-size:clamp(1rem,2.5vw,1.4rem);
+  font-weight:300;font-style:italic;
+  color:rgba(240,237,232,0.5);letter-spacing:0.15em;
+  margin-bottom:6px;
+}
+.hero-brand .h-main{
+  font-size:clamp(4rem,10vw,8rem);
+  font-weight:500;
+  line-height:0.9;
+  letter-spacing:0.06em;
+  background:linear-gradient(160deg,var(--gold-pale) 0%,var(--gold-light) 40%,var(--gold) 75%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-shadow:none;
+}
+
+.hero-tagline{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(0.95rem,2vw,1.2rem);
+  font-weight:300;font-style:italic;
+  color:rgba(240,237,232,0.6);
+  letter-spacing:0.06em;
+  margin-bottom:56px;
+  opacity:0;animation:fadeUp 0.9s 0.75s ease forwards;
+}
+
+.hero-actions{
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  flex-wrap:wrap;
+  opacity:0;animation:fadeUp 0.9s 0.95s ease forwards;
+}
+
+.btn-hero-primary{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:16px 36px;
+  background:linear-gradient(135deg,var(--gold) 0%,#b8903a 100%);
+  border:none;border-radius:var(--radius-sm);
+  color:#0c0c0e;
+  font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:500;
+  letter-spacing:0.1em;text-transform:uppercase;
+  cursor:pointer;transition:all 0.3s;
+}
+.btn-hero-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(201,169,110,0.4);}
+
+.btn-hero-secondary{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:15px 32px;
+  background:transparent;
+  border:1px solid rgba(240,237,232,0.25);
+  border-radius:var(--radius-sm);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:400;
+  letter-spacing:0.08em;text-transform:uppercase;
+  cursor:pointer;transition:all 0.3s;
+}
+.btn-hero-secondary:hover{border-color:var(--gold-light);color:var(--gold-light);transform:translateY(-2px);}
+
+/* Slide dots */
+.slide-dots{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  z-index:2;display:flex;gap:8px;
+}
+.slide-dot{
+  width:6px;height:6px;border-radius:3px;
+  background:rgba(255,255,255,0.25);
+  transition:all 0.3s;cursor:pointer;border:none;padding:0;
+}
+.slide-dot.active{background:var(--gold);width:20px;}
+
+/* Scroll cue */
+.scroll-cue{
+  position:absolute;bottom:36px;right:40px;z-index:2;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  opacity:0;animation:fadeIn 1s 1.8s ease forwards;
+}
+.scroll-cue span{font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.3);}
+.scroll-cue i{color:rgba(255,255,255,0.25);font-size:0.75rem;animation:bounce 1.8s infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* ══════════════════════════════════════════════════════════
+   PAGE 2 — PRICE LIST
+══════════════════════════════════════════════════════════ */
+.price-page{
+  position:relative;z-index:1;
+  max-width:860px;margin:0 auto;
+  padding:80px 24px 80px;
+}
+
+.price-hero{text-align:center;margin-bottom:56px;}
+.price-hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--gold);background:var(--gold-dim);
+  border:1px solid rgba(201,169,110,0.2);padding:5px 16px;
+  border-radius:100px;margin-bottom:22px;
+}
+.price-hero h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2rem,4.5vw,3.2rem);font-weight:400;line-height:1.2;margin-bottom:12px;
+}
+.price-hero h2 em{font-style:italic;color:var(--gold-light);}
+.price-hero p{font-size:0.9rem;color:var(--text-muted);font-weight:300;line-height:1.7;}
+.gold-line{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:24px auto 0;}
+
+.price-category{margin-bottom:36px;}
+.price-cat-header{display:flex;align-items:center;gap:14px;margin-bottom:8px;}
+.price-cat-title{
+  font-size:0.68rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--gold);white-space:nowrap;display:flex;align-items:center;gap:7px;
+}
+.price-cat-line{flex:1;height:1px;background:var(--border);}
+.price-list{display:flex;flex-direction:column;}
+.price-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;border-radius:var(--radius-sm);
+  transition:background 0.15s;cursor:default;
+}
+.price-row:hover{background:var(--surface2);}
+.price-name{font-size:0.9rem;color:var(--text);font-weight:300;flex:1;}
+.price-dots{
+  height:1px;flex:1;min-width:20px;
+  background:repeating-linear-gradient(90deg,var(--border-light) 0,var(--border-light) 3px,transparent 3px,transparent 9px);
+}
+.price-value{
+  font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:500;
+  color:var(--gold-light);white-space:nowrap;min-width:72px;text-align:right;
+}
+.price-value .cur{font-size:0.76rem;color:var(--text-dim);font-family:'DM Sans',sans-serif;font-weight:300;margin-left:2px;}
+
+.price-row.complex{
+  background:var(--surface);border:1px solid var(--border);
+  padding:14px 18px;margin-bottom:6px;
+}
+.price-row.complex:hover{background:rgba(201,169,110,0.05);border-color:rgba(201,169,110,0.2);}
+.price-row.complex .price-value{font-size:1.15rem;color:var(--gold);}
+.complex-name .cname{font-size:0.9rem;color:var(--text);font-weight:400;margin-bottom:4px;}
+.complex-name .cdesc{font-size:0.78rem;color:var(--text-dim);line-height:1.4;}
+
+.price-extras{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.price-extra-card{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  transition:border-color 0.15s;
+}
+.price-extra-card:hover{border-color:var(--border-light);}
+.price-extra-card .price-name{font-size:0.83rem;}
+.price-extra-card .price-value{font-size:1rem;}
+
+.price-cta{
+  margin-top:52px;background:var(--surface);
+  border:1px solid rgba(201,169,110,0.2);border-radius:var(--radius);
+  padding:40px;text-align:center;position:relative;overflow:hidden;
+}
+.price-cta::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 80% at 50% 0%,rgba(201,169,110,0.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.price-cta h3{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:400;margin-bottom:10px;}
+.price-cta h3 em{font-style:italic;color:var(--gold-light);}
+.price-cta p{font-size:0.88rem;color:var(--text-muted);font-weight:300;margin-bottom:26px;}
+.btn-goto-book{
+  display:inline-flex;align-items:center;gap:8px;padding:13px 32px;
+  background:linear-gradient(135deg,var(--gold) 0%,#a8843a 100%);
+  border:none;border-radius:var(--radius-sm);color:#0c0c0e;
+  font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;
+  letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.25s;
+}
+.btn-goto-book:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(201,169,110,0.3);}
+
+/* ══════════════════════════════════════════════════════════
+   PAGE 3 — BOOKING
+══════════════════════════════════════════════════════════ */
+.booking-page{
+  position:relative;z-index:1;
+  max-width:1100px;margin:0 auto;
+  padding:80px 24px;
+}
+
+.section-hero{text-align:center;margin-bottom:56px;}
+.section-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold);background:var(--gold-dim);
+  border:1px solid rgba(201,169,110,0.2);padding:6px 16px;
+  border-radius:100px;margin-bottom:24px;
+}
+.section-hero h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.2rem,5vw,3.6rem);font-weight:400;line-height:1.15;margin-bottom:14px;
+}
+.section-hero h1 em{font-style:italic;color:var(--gold-light);}
+.section-hero p{font-size:0.92rem;color:var(--text-muted);font-weight:300;max-width:460px;margin:0 auto;line-height:1.7;}
+
+.booking-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.card-header{padding:22px 26px 18px;border-bottom:1px solid var(--border);}
+.card-title{
+  font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:500;
+  letter-spacing:0.03em;display:flex;align-items:center;gap:10px;
+}
+.card-title i{font-size:0.9rem;color:var(--gold);}
+.card-body{padding:24px 26px;}
+
+/* ── CALENDAR ── */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.cal-nav-btn{
+  background:transparent;border:1px solid var(--border);color:var(--text-muted);
+  width:34px;height:34px;border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;font-size:0.8rem;flex-shrink:0;
+}
+.cal-nav-btn:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-dim);}
+.cal-month-label{
+  font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:500;
+  text-align:center;letter-spacing:0.04em;text-transform:capitalize;flex:1;
+}
+.cal-grid{margin-top:18px;}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px;}
+.cal-weekday{text-align:center;font-size:0.68rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);padding:6px 0;}
+.cal-weekday.off-label{color:var(--rose);opacity:0.6;}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-day{
+  aspect-ratio:1;border-radius:var(--radius-sm);border:1px solid transparent;background:transparent;
+  cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:400;color:var(--text);
+  transition:all 0.18s;display:flex;align-items:center;justify-content:center;position:relative;
+}
+.cal-day:hover:not(.disabled):not(.empty){background:var(--surface2);border-color:var(--border-light);}
+.cal-day.today{border-color:rgba(201,169,110,0.4);color:var(--gold-light);font-weight:500;}
+.cal-day.selected{background:var(--gold-dim);border-color:var(--gold);color:var(--gold-light);font-weight:500;}
+.cal-day.disabled{color:var(--text-dim);cursor:not-allowed;opacity:0.4;}
+.cal-day.empty{cursor:default;}
+.cal-day.past{color:var(--text-dim);cursor:not-allowed;opacity:0.3;}
+.cal-day.has-slots::after{
+  content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);
+  width:4px;height:4px;border-radius:50%;background:var(--gold);opacity:0.7;
+}
+.cal-days .cal-day{animation:popIn 0.14s ease-out both;}
+@keyframes popIn{from{opacity:0;transform:scale(0.88);}to{opacity:1;transform:scale(1);}}
+
+/* ── TIME ── */
+.time-empty{text-align:center;padding:48px 24px;color:var(--text-dim);}
+.time-empty i{font-size:2rem;margin-bottom:14px;display:block;color:var(--border-light);}
+.time-empty p{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;line-height:1.6;}
+.time-date-label{
+  font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:500;
+  color:var(--gold-light);margin-bottom:16px;font-style:italic;
+}
+.time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.time-slot{
+  padding:10px 6px;border-radius:var(--radius-sm);border:1px solid var(--border);
+  background:var(--surface2);color:var(--text);font-family:'DM Sans',sans-serif;
+  font-size:0.8rem;cursor:pointer;transition:all 0.18s;text-align:center;
+}
+.time-slot:hover:not(.busy){border-color:var(--gold);background:var(--gold-dim);color:var(--gold-light);}
+.time-slot.busy{
+  background:var(--busy);border-color:var(--busy-border);color:var(--text-dim);
+  cursor:not-allowed;text-decoration:line-through;text-decoration-color:var(--busy-border);
+}
+.time-slot.selected{background:var(--gold-dim);border-color:var(--gold);color:var(--gold-light);font-weight:500;}
+
+.booking-form{margin-top:20px;padding-top:20px;border-top:1px solid var(--border);}
+.booking-summary{
+  background:var(--surface2);border:1px solid var(--border-light);
+  border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:16px;
+  font-size:0.85rem;color:var(--text-muted);display:flex;align-items:center;gap:10px;
+}
+.booking-summary i{color:var(--gold);}
+.booking-summary strong{color:var(--gold-light);font-weight:500;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group label{font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim);}
+.form-group input{
+  background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;
+  transition:border-color 0.2s;outline:none;
+}
+.form-group input:focus{border-color:var(--gold);}
+.form-group input::placeholder{color:var(--text-dim);}
+.btn-book{
+  width:100%;padding:13px 24px;
+  background:linear-gradient(135deg,var(--gold) 0%,#a8843a 100%);
+  border:none;border-radius:var(--radius-sm);color:#0c0c0e;
+  font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:500;
+  letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;
+  transition:all 0.25s;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-book:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(201,169,110,0.3);}
+
+/* ──────────────────────── TOAST ──────────────────────── */
+.toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--surface2);border:1px solid var(--border-light);
+  border-radius:var(--radius);padding:14px 24px;
+  font-size:0.88rem;color:var(--text);z-index:9999;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  min-width:260px;text-align:center;
+  box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:10px;justify-content:center;white-space:nowrap;
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.success{border-color:rgba(111,207,151,0.4);}
+.toast.success i{color:var(--success);}
+.toast.error{border-color:rgba(235,87,87,0.4);}
+.toast.error i{color:var(--error);}
+
+/* ══════════════════════════════════════════════════════════
+   ADMIN PANEL
+══════════════════════════════════════════════════════════ */
+.admin-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;
+  backdrop-filter:blur(8px);display:none;
+}
+.admin-overlay.open{display:block;}
+.admin-panel{
+  position:fixed;top:0;right:0;width:min(540px,100vw);height:100vh;
+  background:var(--surface);border-left:1px solid var(--border);
+  z-index:1001;display:flex;flex-direction:column;
+  transform:translateX(100%);
+  transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);overflow:hidden;
+}
+.admin-panel.open{transform:translateX(0);}
+.admin-head{
+  padding:24px 28px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.admin-head h2{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;}
+.admin-close{
+  background:transparent;border:1px solid var(--border);color:var(--text-muted);
+  width:36px;height:36px;border-radius:var(--radius-sm);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-size:0.9rem;
+}
+.admin-close:hover{border-color:var(--error);color:var(--error);}
+.admin-body{flex:1;overflow-y:auto;padding:24px 28px;display:flex;flex-direction:column;gap:28px;}
+.admin-body::-webkit-scrollbar{width:4px;}
+.admin-body::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:2px;}
+.admin-section{display:flex;flex-direction:column;gap:14px;}
+.a-stitle{
+  font-size:0.7rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--gold);display:flex;align-items:center;gap:8px;
+  padding-bottom:10px;border-bottom:1px solid var(--border);
+}
+.a-row{display:flex;gap:10px;align-items:flex-end;}
+.a-row>.ag{flex:1;}
+.alabel{font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px;display:block;}
+.ainput{
+  background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:9px 14px;color:var(--text);font-family:'DM Sans',sans-serif;
+  font-size:0.85rem;outline:none;width:100%;transition:border-color 0.2s;
+}
+.ainput:focus{border-color:var(--gold);}
+.abtn{
+  padding:9px 18px;border-radius:var(--radius-sm);border:1px solid var(--border-light);
+  background:var(--surface2);color:var(--text-muted);font-family:'DM Sans',sans-serif;
+  font-size:0.8rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;
+}
+.abtn:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-dim);}
+.abtn.danger:hover{border-color:var(--error);color:var(--error);background:rgba(235,87,87,0.1);}
+
+/* Off days chips */
+.chips{display:flex;flex-wrap:wrap;gap:7px;}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 10px;
+  background:var(--rose-dim);border:1px solid rgba(232,160,160,0.2);
+  border-radius:100px;font-size:0.78rem;color:var(--rose);
+}
+.chip-rm{background:none;border:none;color:var(--rose);cursor:pointer;opacity:0.6;transition:opacity 0.15s;padding:0;font-size:0.7rem;display:flex;align-items:center;}
+.chip-rm:hover{opacity:1;}
+
+/* Default off days toggle */
+.dow-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.dow-btn{
+  padding:8px 4px;border-radius:6px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--text-muted);font-size:0.73rem;
+  cursor:pointer;transition:all 0.2s;text-align:center;font-family:'DM Sans',sans-serif;
+}
+.dow-btn:hover{border-color:var(--border-light);color:var(--text);}
+.dow-btn.off{background:var(--rose-dim);border-color:rgba(232,160,160,0.3);color:var(--rose);}
+
+/* Slot toggle */
+.a-time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
+.a-time-btn{
+  padding:8px 4px;border-radius:6px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--text-muted);font-size:0.75rem;
+  cursor:pointer;transition:all 0.18s;text-align:center;
+}
+.a-time-btn:hover{border-color:var(--border-light);color:var(--text);}
+.a-time-btn.marked{background:var(--busy);border-color:var(--busy-border);color:var(--rose);}
+
+.empty-msg{font-size:0.82rem;color:var(--text-dim);font-style:italic;}
+.admin-footer{padding:20px 28px;border-top:1px solid var(--border);flex-shrink:0;}
+
+/* ──────────────────────── RESPONSIVE ──────────────────────── */
+@media(max-width:780px){
+  .booking-grid{grid-template-columns:1fr;}
+  .booking-page,.price-page{padding:72px 16px 60px;}
+  .form-row{grid-template-columns:1fr;}
+  .time-grid{grid-template-columns:repeat(3,1fr);}
+  .price-extras{grid-template-columns:1fr;}
+  .price-cta{padding:28px 20px;}
+  .hero-brand .h-main{font-size:clamp(3.5rem,18vw,7rem);}
+}
+@media(max-width:560px){
+  .topnav{padding:0 20px;}
+  .nav-link span{display:none;}
+  .btn-admin span{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ STICKY NAV ═══════════════════ -->
+<nav class="topnav" id="topnav">
+  <div class="nav-logo" onclick="showPage('hero')">
+    <span class="pre">по</span>
+    <span class="main">Любви</span>
+  </div>
+  <div class="nav-links">
+    <button class="nav-link active" id="tabHero" onclick="showPage('hero')">
+      <i class="fa-solid fa-house"></i><span>Главная</span>
+    </button>
+    <button class="nav-link" id="tabPrice" onclick="showPage('price')">
+      <i class="fa-solid fa-receipt"></i><span>Прайс-лист</span>
+    </button>
+    <button class="nav-link" id="tabBook" onclick="showPage('book')">
+      <i class="fa-regular fa-calendar-check"></i><span>Запись</span>
+    </button>
+  </div>
+  <div class="nav-right">
+    <button class="btn-admin" onclick="openAdmin()">
+      <i class="fa-solid fa-sliders"></i><span>Редактор</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════════════ PAGE: HERO ═══════════════════ -->
+<div class="page active" id="pageHero">
+  <section class="hero-section">
+
+    <!-- Slideshow (place your salon photos as bg-image in .slide-N or via JS below) -->
+    <div class="slideshow" id="slideshow">
+      <div class="slide slide-1 active" id="slide0"></div>
+      <div class="slide slide-2" id="slide1"></div>
+      <div class="slide slide-3" id="slide2"></div>
+    </div>
+
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow">Лазерная эпиляция</div>
+
+      <div class="hero-brand">
+        <span class="h-pre">по</span>
+        <span class="h-main">Любви</span>
+      </div>
+
+      <div class="hero-tagline">Безупречная гладкость — с заботой и вниманием</div>
+
+      <div class="hero-actions">
+        <button class="btn-hero-primary" onclick="showPage('price')">
+          <i class="fa-solid fa-receipt"></i>
+          Прайс-лист
+        </button>
+        <button class="btn-hero-secondary" onclick="showPage('book')">
+          <i class="fa-regular fa-calendar-check"></i>
+          Записаться
+        </button>
+      </div>
+    </div>
+
+    <!-- Slide dots -->
+    <div class="slide-dots" id="slideDots"></div>
+
+    <div class="scroll-cue">
+      <span>листать</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
+
+  </section>
+</div>
+
+<!-- ═══════════════════ PAGE: PRICE LIST ═══════════════════ -->
+<div class="page" id="pagePrice">
+  <div class="price-page">
+
+    <div class="price-hero">
+      <div class="price-hero-tag"><i class="fa-solid fa-wand-sparkles"></i>Прайс-лист — Женский лазер</div>
+      <h2>Цены на <em>лазерную</em><br>эпиляцию</h2>
+      <p>Стоимость одной процедуры. Цена указана за зону.</p>
+      <div class="gold-line"></div>
+    </div>
+
+    <div class="price-category">
+      <div class="price-cat-header"><div class="price-cat-title"><i class="fa-regular fa-face-smile"></i>Лицо</div><div class="price-cat-line"></div></div>
+      <div class="price-list">
+        <div class="price-row"><span class="price-name">Лоб / виски</span><span class="price-dots"></span><span class="price-value">400 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Бакенбарды / подбородок</span><span class="price-dots"></span><span class="price-value">400 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Щёки / шея</span><span class="price-dots"></span><span class="price-value">600 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Верхняя / нижняя губа</span><span class="price-dots"></span><span class="price-value">600 <span class="cur">₽</span></span></div>
+      </div>
+    </div>
+
+    <div class="price-category">
+      <div class="price-cat-header"><div class="price-cat-title"><i class="fa-solid fa-heart"></i>Тело</div><div class="price-cat-line"></div></div>
+      <div class="price-list">
+        <div class="price-row"><span class="price-name">Декольте</span><span class="price-dots"></span><span class="price-value">600 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Ореолы</span><span class="price-dots"></span><span class="price-value">400 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Линия живота</span><span class="price-dots"></span><span class="price-value">350 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Живот полностью</span><span class="price-dots"></span><span class="price-value">1 000 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Поясница</span><span class="price-dots"></span><span class="price-value">1 000 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Ягодицы</span><span class="price-dots"></span><span class="price-value">1 200 <span class="cur">₽</span></span></div>
+      </div>
+    </div>
+
+    <div class="price-category">
+      <div class="price-cat-header"><div class="price-cat-title"><i class="fa-regular fa-hand"></i>Руки</div><div class="price-cat-line"></div></div>
+      <div class="price-list">
+        <div class="price-row"><span class="price-name">Подмышечные впадины</span><span class="price-dots"></span><span class="price-value">700 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Руки полностью и кисти</span><span class="price-dots"></span><span class="price-value">1 800 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Предплечье</span><span class="price-dots"></span><span class="price-value">1 100 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Плечо</span><span class="price-dots"></span><span class="price-value">1 100 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Кисть (включая пальцы)</span><span class="price-dots"></span><span class="price-value">400 <span class="cur">₽</span></span></div>
+      </div>
+    </div>
+
+    <div class="price-category">
+      <div class="price-cat-header"><div class="price-cat-title"><i class="fa-solid fa-star"></i>Бикини</div><div class="price-cat-line"></div></div>
+      <div class="price-list">
+        <div class="price-row"><span class="price-name">Классическое бикини</span><span class="price-dots"></span><span class="price-value">1 200 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Глубокое бикини</span><span class="price-dots"></span><span class="price-value">1 800 <span class="cur">₽</span></span></div>
+      </div>
+    </div>
+
+    <div class="price-category">
+      <div class="price-cat-header"><div class="price-cat-title"><i class="fa-solid fa-person-walking"></i>Ноги</div><div class="price-cat-line"></div></div>
+      <div class="price-list">
+        <div class="price-row"><span class="price-name">Бёдра полностью</span><span class="price-dots"></span><span class="price-value">1 800 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Бёдра (внутренняя поверхность)</span><span class="price-dots"></span><span class="price-value">1 100 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Бёдра (задняя поверхность)</span><span class="price-dots"></span><span class="price-value">1 100 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Голени</span><span class="price-dots"></span><span class="price-value">1 800 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Ноги полностью и стопы</span><span class="price-dots"></span><span class="price-value">3 500 <span class="cur">₽</span></span></div>
+        <div class="price-row"><span class="price-name">Стопы (включая пальцы)</span><span class="price-dots"></span><span class="price-value">400 <span class="cur">₽</span></span></div>
+      </div>
+    </div>
+
+    <div class="price-category">
+      <div class="price-cat-header"><div class="price-cat-title"><i class="fa-solid fa-plus"></i>Дополнительно</div><div class="price-cat-line"></div></div>
+      <div class="price-extras">
+        <div class="price-extra-card"><span class="price-name">Одноразовая бритва</span><span class="price-value">50 <span class="cur">₽</span></span></div>
+        <div class="price-extra-card"><span class="price-name">Коррекция длины волос</span><span class="price-value">200 <span class="cur">₽</span></span></div>
+      </div>
+    </div>
+
+    <div class="price-category">
+      <div class="price-cat-header"><div class="price-cat-title"><i class="fa-solid fa-layer-group"></i>Выгодные комплексы</div><div class="price-cat-line"></div></div>
+      <div class="price-list">
+        <div class="price-row complex">
+          <div class="complex-name flex:1"><div class="cname">Комплекс 1</div><div class="cdesc">Глубокое бикини + подмышечные впадины</div></div>
+          <span class="price-dots"></span><span class="price-value">2 100 <span class="cur">₽</span></span>
+        </div>
+        <div class="price-row complex">
+          <div class="complex-name flex:1"><div class="cname">Комплекс 2</div><div class="cdesc">Глубокое бикини + подмышечные впадины + голени</div></div>
+          <span class="price-dots"></span><span class="price-value">4 000 <span class="cur">₽</span></span>
+        </div>
+        <div class="price-row complex">
+          <div class="complex-name flex:1"><div class="cname">Комплекс 3</div><div class="cdesc">Глубокое бикини + ноги полностью + подмышечные впадины</div></div>
+          <span class="price-dots"></span><span class="price-value">5 500 <span class="cur">₽</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="price-cta">
+      <h3>Готовы к <em>процедуре</em>?</h3>
+      <p>Запишитесь онлайн прямо сейчас — быстро и удобно</p>
+      <button class="btn-goto-book" onclick="showPage('book')">
+        <i class="fa-regular fa-calendar-check"></i>
+        Записаться сейчас
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════ PAGE: BOOKING ═══════════════════ -->
+<div class="page" id="pageBook">
+  <div class="booking-page">
+
+    <div class="section-hero">
+      <div class="section-tag"><i class="fa-regular fa-star"></i>Онлайн-запись</div>
+      <h1>Запишитесь на <em>процедуру</em></h1>
+      <p>Выберите удобный день и время — мы позаботимся об остальном</p>
+    </div>
+
+    <div class="booking-grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-regular fa-calendar"></i>Выберите дату</div>
+        </div>
+        <div class="card-body">
+          <div class="cal-nav">
+            <button class="cal-nav-btn" onclick="changeMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="cal-month-label" id="calMonthLabel">—</div>
+            <button class="cal-nav-btn" onclick="changeMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+          <div class="cal-grid">
+            <div class="cal-weekdays" id="calWeekdays"></div>
+            <div class="cal-days" id="calDays"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-regular fa-clock"></i>Выберите время</div>
+        </div>
+        <div class="card-body">
+          <div id="timePanel">
+            <div class="time-empty">
+              <i class="fa-regular fa-calendar-days"></i>
+              <p>Выберите дату в календаре, чтобы увидеть доступное время</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg"></span></div>
+
+<!-- Admin overlay -->
+<div class="admin-overlay" id="adminOverlay" onclick="closeAdmin()"></div>
+
+<!-- Admin panel -->
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-head">
+    <h2><i class="fa-solid fa-sliders" style="color:var(--gold);margin-right:10px;font-size:0.9em"></i>Панель редактора</h2>
+    <button class="admin-close" onclick="closeAdmin()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="admin-body">
+
+    <!-- Weekday toggles -->
+    <div class="admin-section">
+      <div class="a-stitle"><i class="fa-solid fa-calendar-week"></i>Выходные дни недели</div>
+      <p style="font-size:0.82rem;color:var(--text-dim);line-height:1.6">Нажмите на день, чтобы включить/выключить его как выходной.</p>
+      <div class="dow-grid" id="dowGrid"></div>
+    </div>
+
+    <!-- Extra off days -->
+    <div class="admin-section">
+      <div class="a-stitle"><i class="fa-solid fa-ban"></i>Отдельные выходные даты</div>
+      <div>
+        <label class="alabel">Добавить конкретную дату</label>
+        <div class="a-row">
+          <div class="ag"><input type="date" class="ainput" id="adminOffDayInput"></div>
+          <button class="abtn" onclick="addOffDay()">Добавить</button>
+        </div>
+      </div>
+      <div class="chips" id="offdaysList"><span class="empty-msg">Нет дополнительных выходных</span></div>
+    </div>
+
+    <!-- Slot management -->
+    <div class="admin-section">
+      <div class="a-stitle"><i class="fa-solid fa-toggle-on"></i>Управление слотами</div>
+      <div>
+        <label class="alabel">Выберите дату</label>
+        <input type="date" class="ainput" id="adminSlotDate" oninput="renderAdminSlots()">
+      </div>
+      <div id="adminSlotsWrap" style="display:none">
+        <label class="alabel" style="margin-bottom:10px">Клик — переключить занятость слота</label>
+        <div class="a-time-grid" id="adminSlotsGrid"></div>
+      </div>
+      <div id="adminSlotsEmpty" style="display:none">
+        <span class="empty-msg">Этот день является выходным — слоты недоступны.</span>
+      </div>
+    </div>
+
+    <!-- Фото слайдшоу -->
+    <div class="admin-section">
+      <div class="a-stitle"><i class="fa-solid fa-image"></i>Фото главного экрана</div>
+      <p style="font-size:0.82rem;color:var(--text-dim);line-height:1.6">Вставьте URL фотографий вашего салона для слайдшоу на главном экране.</p>
+      <div style="display:flex;flex-direction:column;gap:8px" id="photoInputs">
+        <div class="a-row"><div class="ag"><input type="text" class="ainput" placeholder="URL фото 1 (напр. https://...)" id="photoUrl0"></div><button class="abtn" onclick="setSlidePhoto(0)">✓</button></div>
+        <div class="a-row"><div class="ag"><input type="text" class="ainput" placeholder="URL фото 2" id="photoUrl1"></div><button class="abtn" onclick="setSlidePhoto(1)">✓</button></div>
+        <div class="a-row"><div class="ag"><input type="text" class="ainput" placeholder="URL фото 3" id="photoUrl2"></div><button class="abtn" onclick="setSlidePhoto(2)">✓</button></div>
+      </div>
+    </div>
+
+    <!-- Reset -->
+    <div class="admin-section">
+      <div class="a-stitle"><i class="fa-solid fa-trash"></i>Сброс данных</div>
+      <p style="font-size:0.82rem;color:var(--text-dim);line-height:1.6">Удалит все записи, настройки выходных и занятые слоты.</p>
+      <button class="abtn danger" onclick="confirmReset()">
+        <i class="fa-solid fa-rotate-left" style="margin-right:7px"></i>Сбросить все данные
+      </button>
+    </div>
+
+  </div>
+  <div class="admin-footer">
+    <p style="font-size:0.72rem;color:var(--text-dim);text-align:center;letter-spacing:0.04em">
+      Данные хранятся в localStorage вашего браузера
+    </p>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  DATA LAYER
+// ═══════════════════════════════════════════════════════════════
+const LS_B    = 'plb_bookings';   // { "YYYY-MM-DD:HH:MM": {name,phone,ts} }
+const LS_M    = 'plb_busy';       // { "YYYY-MM-DD:HH:MM": true }
+const LS_O    = 'plb_offdays';    // ["YYYY-MM-DD",...]
+const LS_DOW  = 'plb_dow';        // [0,6] - off weekdays (0=Sun,1=Mon...6=Sat)
+const LS_PHOTOS = 'plb_photos';   // ["url1","url2","url3"]
+
+const lGet = (k,d)=>{ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch{return d;} };
+const lSet = (k,v)=>localStorage.setItem(k,JSON.stringify(v));
+
+const getBookings = ()=>lGet(LS_B,{});
+const getBusy     = ()=>lGet(LS_M,{});
+const getOffDays  = ()=>lGet(LS_O,[]);
+// Default: Sat(6) and Sun(0) are off — but admin can change this
+const getOffDow   = ()=>lGet(LS_DOW,[0,6]);
+const getPhotos   = ()=>lGet(LS_PHOTOS,['','','']);
+
+const isSlotBusy  = (ds,t)=>!!(getBookings()[ds+':'+t])||!!(getBusy()[ds+':'+t]);
+const isOffDay    = (ds)=>getOffDays().includes(ds);
+const isOffWeekday= (dow)=>getOffDow().includes(dow);
+
+function bookSlot(ds,t,name,phone){ const b=getBookings(); b[ds+':'+t]={name,phone,ts:Date.now()}; lSet(LS_B,b); }
+function toggleBusy(ds,t){
+  const busy=getBusy(),key=ds+':'+t,b=getBookings();
+  if(b[key]){delete b[key];lSet(LS_B,b);}
+  if(busy[key])delete busy[key]; else busy[key]=true;
+  lSet(LS_M,busy);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PAGE NAVIGATION
+// ═══════════════════════════════════════════════════════════════
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  const map={hero:'pageHero',price:'pagePrice',book:'pageBook'};
+  const tmap={hero:'tabHero',price:'tabPrice',book:'tabBook'};
+  document.getElementById(map[id]).classList.add('active');
+  document.getElementById(tmap[id]).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// Scroll-aware nav
+window.addEventListener('scroll',()=>{
+  document.getElementById('topnav').classList.toggle('scrolled',window.scrollY>30);
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  SLIDESHOW
+// ═══════════════════════════════════════════════════════════════
+let slideIdx = 0, slideTimer;
+const SLIDES = [document.getElementById('slide0'),document.getElementById('slide1'),document.getElementById('slide2')];
+
+function initSlideshow(){
+  // Load saved photos
+  const photos = getPhotos();
+  photos.forEach((url,i)=>{ if(url) SLIDES[i].style.backgroundImage=`url('${url}')`; });
+
+  // Build dots
+  const dotsEl = document.getElementById('slideDots');
+  dotsEl.innerHTML = '';
+  SLIDES.forEach((_,i)=>{
+    const btn=document.createElement('button');
+    btn.className='slide-dot'+(i===0?' active':'');
+    btn.onclick=()=>goSlide(i);
+    dotsEl.appendChild(btn);
+  });
+
+  slideTimer=setInterval(()=>goSlide((slideIdx+1)%SLIDES.length),5000);
+}
+
+function goSlide(idx){
+  SLIDES[slideIdx].classList.remove('active');
+  document.querySelectorAll('.slide-dot')[slideIdx]?.classList.remove('active');
+  slideIdx=idx;
+  SLIDES[slideIdx].classList.add('active');
+  document.querySelectorAll('.slide-dot')[slideIdx]?.classList.add('active');
+}
+
+function setSlidePhoto(idx){
+  const url=document.getElementById('photoUrl'+idx).value.trim();
+  if(!url){showToast('Введите URL фотографии','error');return;}
+  const photos=getPhotos();
+  photos[idx]=url;
+  lSet(LS_PHOTOS,photos);
+  SLIDES[idx].style.backgroundImage=`url('${url}')`;
+  showToast('Фото обновлено','success');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CALENDAR
+// ═══════════════════════════════════════════════════════════════
+const p2=n=>String(n).padStart(2,'0');
+const today=new Date(); today.setHours(0,0,0,0);
+let curYear=today.getFullYear(), curMonth=today.getMonth();
+let selDate=null, selTime=null;
+
+const MOS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const DAYS_SHORT=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+// JS getDay(): 0=Sun,1=Mon,...,6=Sat  →  display Mon=col0...Sun=col6
+// Display col index to JS dow: col0→1,col1→2,...,col5→6,col6→0
+const COL_TO_DOW=[1,2,3,4,5,6,0];
+
+const dstr=(y,m,d)=>`${y}-${p2(m+1)}-${p2(d)}`;
+
+function renderWeekdayHeaders(){
+  const offDow=getOffDow();
+  const c=document.getElementById('calWeekdays'); c.innerHTML='';
+  DAYS_SHORT.forEach((label,col)=>{
+    const dow=COL_TO_DOW[col];
+    const el=document.createElement('div');
+    el.className='cal-weekday'+(offDow.includes(dow)?' off-label':'');
+    el.textContent=label;
+    c.appendChild(el);
+  });
+}
+
+function renderCalendar(){
+  renderWeekdayHeaders();
+  document.getElementById('calMonthLabel').textContent=MOS[curMonth]+' '+curYear;
+  const fd=new Date(curYear,curMonth,1).getDay(); // 0=Sun
+  const startOff=(fd+6)%7; // offset for Mon-first grid
+  const dim=new Date(curYear,curMonth+1,0).getDate();
+  const c=document.getElementById('calDays'); c.innerHTML='';
+
+  for(let i=0;i<startOff;i++){const el=document.createElement('div');el.className='cal-day empty';c.appendChild(el);}
+
+  for(let d=1;d<=dim;d++){
+    const ds=dstr(curYear,curMonth,d);
+    const dt=new Date(curYear,curMonth,d);
+    const dow=dt.getDay();
+    const isWe=isOffWeekday(dow);
+    const isPast=dt<today;
+    const isOff=isOffDay(ds);
+    const isTd=ds===dstr(today.getFullYear(),today.getMonth(),today.getDate());
+    const isSel=selDate===ds;
+    const disabled=isWe||isPast||isOff;
+    const hasFree=!disabled&&genSlots().some(t=>!isSlotBusy(ds,t));
+    const el=document.createElement('div');
+    let cls='cal-day';
+    if(disabled)cls+=isPast?' past':' disabled';
+    if(isTd&&!disabled)cls+=' today';
+    if(isSel)cls+=' selected';
+    if(hasFree&&!disabled)cls+=' has-slots';
+    el.className=cls;el.textContent=d;
+    if(!disabled)el.onclick=()=>selectDate(ds);
+    c.appendChild(el);
+  }
+}
+
+function changeMonth(dir){
+  curMonth+=dir;
+  if(curMonth>11){curMonth=0;curYear++;}
+  if(curMonth<0){curMonth=11;curYear--;}
+  renderCalendar();
+}
+
+function selectDate(ds){ selDate=ds; selTime=null; renderCalendar(); renderTimePanel(); }
+
+// ═══════════════════════════════════════════════════════════════
+//  SLOTS
+// ═══════════════════════════════════════════════════════════════
+function genSlots(){
+  const s=[];
+  for(let h=10;h<=20;h++){s.push(p2(h)+':00');if(h<20)s.push(p2(h)+':30');}
+  return s;
+}
+const ALL_SLOTS=genSlots();
+
+function fmtDate(ds){
+  const[y,m,d]=ds.split('-').map(Number);
+  const dt=new Date(y,m-1,d);
+  const days=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+  const mons=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  return `${d} ${mons[m-1]} ${y}, ${days[dt.getDay()]}`;
+}
+
+function renderTimePanel(){
+  const p=document.getElementById('timePanel');
+  if(!selDate){
+    p.innerHTML=`<div class="time-empty"><i class="fa-regular fa-calendar-days"></i><p>Выберите дату в календаре, чтобы увидеть доступное время</p></div>`;
+    return;
+  }
+  let html=`<div class="time-date-label"><i class="fa-regular fa-calendar" style="margin-right:8px"></i>${fmtDate(selDate)}</div><div class="time-grid">`;
+  ALL_SLOTS.forEach(t=>{
+    const busy=isSlotBusy(selDate,t);
+    const cls='time-slot'+(busy?' busy':selTime===t?' selected':'');
+    html+=`<button class="${cls}" ${busy?'':`onclick="selectTime('${t}')"`}>${t}</button>`;
+  });
+  html+=`</div>`;
+  if(selTime){
+    html+=`
+    <div class="booking-form">
+      <div class="booking-summary"><i class="fa-regular fa-clock"></i><div>Запись: <strong>${fmtDate(selDate)}</strong> в <strong>${selTime}</strong></div></div>
+      <div class="form-row">
+        <div class="form-group"><label>Ваше имя</label><input type="text" id="clientName" placeholder="Имя Фамилия" autocomplete="name"></div>
+        <div class="form-group"><label>Телефон</label><input type="tel" id="clientPhone" placeholder="+7 (___) ___-__-__" autocomplete="tel"></div>
+      </div>
+      <button class="btn-book" onclick="confirmBooking()"><i class="fa-regular fa-calendar-check"></i>Подтвердить запись</button>
+    </div>`;
+  }
+  p.innerHTML=html;
+}
+
+function selectTime(t){selTime=t;renderTimePanel();}
+
+function confirmBooking(){
+  const name=(document.getElementById('clientName')?.value||'').trim();
+  const phone=(document.getElementById('clientPhone')?.value||'').trim();
+  if(!name){showToast('Пожалуйста, введите имя','error');return;}
+  if(!phone){showToast('Пожалуйста, введите телефон','error');return;}
+  if(isSlotBusy(selDate,selTime)){showToast('Этот слот уже занят','error');selTime=null;renderTimePanel();return;}
+  bookSlot(selDate,selTime,name,phone);
+  showToast(`Запись подтверждена: ${selTime}, ${name}`,'success');
+  selTime=null;renderCalendar();renderTimePanel();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════════════════
+let toastTimer;
+function showToast(msg,type='success'){
+  const el=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  el.className='toast '+type+' show';
+  el.querySelector('i').className=type==='success'?'fa-solid fa-circle-check':'fa-solid fa-circle-exclamation';
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3200);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ADMIN
+// ═══════════════════════════════════════════════════════════════
+function openAdmin(){
+  // Pre-fill photo URLs
+  const photos=getPhotos();
+  photos.forEach((url,i)=>{
+    const inp=document.getElementById('photoUrl'+i);
+    if(inp)inp.value=url||'';
+  });
+  document.getElementById('adminOverlay').classList.add('open');
+  setTimeout(()=>document.getElementById('adminPanel').classList.add('open'),10);
+  renderDowGrid();renderAdminOffDays();renderAdminSlots();
+}
+function closeAdmin(){
+  document.getElementById('adminPanel').classList.remove('open');
+  document.getElementById('adminOverlay').classList.remove('open');
+  renderCalendar();renderTimePanel();
+}
+
+// DOW grid
+const DOW_LABELS=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+function renderDowGrid(){
+  const offDow=getOffDow();
+  const g=document.getElementById('dowGrid'); g.innerHTML='';
+  // Show Mon→Sun order
+  const ORDER=[1,2,3,4,5,6,0];
+  ORDER.forEach(dow=>{
+    const btn=document.createElement('button');
+    btn.className='dow-btn'+(offDow.includes(dow)?' off':'');
+    btn.textContent=DOW_LABELS[dow];
+    btn.title=offDow.includes(dow)?'Выходной (нажмите чтобы убрать)':'Рабочий (нажмите чтобы сделать выходным)';
+    btn.onclick=()=>toggleDow(dow);
+    g.appendChild(btn);
+  });
+}
+function toggleDow(dow){
+  const offDow=getOffDow();
+  const idx=offDow.indexOf(dow);
+  if(idx>=0)offDow.splice(idx,1); else offDow.push(dow);
+  lSet(LS_DOW,offDow);
+  renderDowGrid();
+  showToast(offDow.includes(dow)?`${DOW_LABELS[dow]} — теперь выходной`:`${DOW_LABELS[dow]} — теперь рабочий`,'success');
+}
+
+function addOffDay(){
+  const val=document.getElementById('adminOffDayInput').value;
+  if(!val){showToast('Выберите дату','error');return;}
+  const od=getOffDays();
+  if(!od.includes(val)){od.push(val);od.sort();lSet(LS_O,od);}
+  document.getElementById('adminOffDayInput').value='';
+  renderAdminOffDays();showToast('Выходной добавлен','success');
+}
+function removeOffDay(ds){
+  lSet(LS_O,getOffDays().filter(d=>d!==ds));
+  renderAdminOffDays();showToast('Выходной убран','success');
+}
+function renderAdminOffDays(){
+  const od=getOffDays(),c=document.getElementById('offdaysList');
+  c.innerHTML=!od.length?'<span class="empty-msg">Нет дополнительных выходных</span>'
+    :od.map(d=>{const[y,m,dd]=d.split('-');return`<div class="chip">${dd}.${m}.${y}<button class="chip-rm" onclick="removeOffDay('${d}')"><i class="fa-solid fa-xmark"></i></button></div>`;}).join('');
+}
+function renderAdminSlots(){
+  const ds=document.getElementById('adminSlotDate').value;
+  const wrap=document.getElementById('adminSlotsWrap'),empty=document.getElementById('adminSlotsEmpty'),grid=document.getElementById('adminSlotsGrid');
+  if(!ds){wrap.style.display='none';empty.style.display='none';return;}
+  const dow=new Date(ds+'T00:00:00').getDay();
+  if(isOffWeekday(dow)||isOffDay(ds)){wrap.style.display='none';empty.style.display='block';return;}
+  wrap.style.display='block';empty.style.display='none';
+  grid.innerHTML=ALL_SLOTS.map(t=>`<button class="a-time-btn ${isSlotBusy(ds,t)?'marked':''}" onclick="adminToggle('${ds}','${t}')">${t}</button>`).join('');
+}
+function adminToggle(ds,t){toggleBusy(ds,t);renderAdminSlots();if(selDate===ds)renderTimePanel();}
+function confirmReset(){
+  if(confirm('Вы уверены? Все данные будут удалены.')){
+    [LS_B,LS_M,LS_O].forEach(k=>localStorage.removeItem(k));
+    lSet(LS_DOW,[0,6]); // reset to default
+    selDate=null;selTime=null;
+    renderDowGrid();renderAdminOffDays();renderAdminSlots();renderCalendar();renderTimePanel();
+    showToast('Все данные сброшены','success');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════
+initSlideshow();
+renderCalendar();
+renderTimePanel();
+</script>
+</body>
+</html>
